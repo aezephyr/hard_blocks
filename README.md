@@ -1,7 +1,5 @@
 ## _**Hard Blocks**_ is an attempt to encourage caving over branch mining.
 
-<br>
-
 _**Hard Blocks**_ makes the blocks listed in the `hard_blocks.json` config file harder to mine.
 By default, the only effected blocks are: 
 `stone`, `granite`, `diorite`, `andesite`, `tuff`, `deepslate`, `dripstone_block`, and `netherrack`
