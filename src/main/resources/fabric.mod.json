@@ -3,7 +3,7 @@
   "id": "hard_blocks",
   "version": "${version}",
 
-  "name": "hard_blocks",
+  "name": "hard_blocks-1.16.5",
   "description": "Some blocks are harder to mine.",
   "authors": [
     "aezephyr"
@@ -27,10 +27,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
+    "minecraft": "1.16.x"
   },
   "suggests": {
     "another-mod": "*"
