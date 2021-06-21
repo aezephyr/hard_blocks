@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.github.aezephyr.hard_blocks.HardBlocks;
 
-//import java.util.Iterator;
+import java.util.Iterator;
 
 //Credits: https://github.com/LordDeatHunter/BedrockBlocks
 
@@ -21,7 +21,7 @@ public class AbstractBlockMixin {
     @Inject(method = "calcBlockBreakingDelta", at = @At("HEAD"), cancellable = true)
     public void changeHardness(BlockState state, PlayerEntity player, BlockView world, BlockPos pos, CallbackInfoReturnable<Float> ci) {
 
-        // these lines are copied from
+        // these lines are copied from AbstractBlock.calcBlockBreakingDelta
         float hardness = state.getHardness(world, pos);
         if (hardness == -1.0F) {
             ci.setReturnValue(0.0F);
@@ -34,14 +34,8 @@ public class AbstractBlockMixin {
             ci.setReturnValue(speed / hardness / harvest_value);
         }  else {
 
-            //
             // adjust the speed that the block breaks by a proportion of how many similar neighbors it has
             int neighbor_count = 0;
-
-            // can I use iterateOutwards()?
-            // for (Iterator i = (Iterator) pos.iterateOutwards(pos, 1, 1, 1); i.hasNext();) {
-            //    System.out.println("hard_blocks AbstractBlockMixin iterateOutwards");
-            //};
 
             // if the block above this one is of the same material then increment a counter.
             if (world.getBlockState(pos.up()).getBlock() == state.getBlock()) {
@@ -77,7 +71,27 @@ public class AbstractBlockMixin {
                     }
                 }
             }
+/*
+            // This is a similar way of doing the above but instead using iterateOutwards and comparing the block to all 26 surrounding blocks
+            // Now that I've written it, I'm not convinced it's better.
 
+            int counter = 0;
+            int matches = -1; // subtract one because it's going to match itself
+            Iterator positions = BlockPos.iterateOutwards(pos, 1,1,1).iterator();
+            while(positions.hasNext()) {
+                BlockPos neighbor_pos = (BlockPos) positions.next();
+                if(world.getBlockState(neighbor_pos).getBlock() == state.getBlock()) {
+                    matches++;
+                }
+                counter++;
+            }
+            double percent = 100*(float)matches/(float)counter; // percentage of the surrounding blocks that are the same
+            double gradient = Math.exp(Math.sqrt(percent))/(1+Math.sqrt(percent)); // how much slower should the block break
+
+            //System.out.println("hard_blocks iterateOutwards blocks: " + counter + ", matches: " + matches + ", percent: " + percent + ", gradient: " + gradient);
+
+            speed = speed/(float)gradient;
+*/
             ci.setReturnValue(speed / (harvest_value * hardness));
         }
     }
